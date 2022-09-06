@@ -17,11 +17,39 @@ class EvenementController extends Controller
      */
     public function index()
     {
-        $evenements = Evenement::all();
+        $evenements = Evenement::orderBy("date_heure", 'desc')->get();
 
         return Inertia::render('Evenement/Index', [
             'evenements' => $evenements
         ]);
+    }
+
+    public function filter(Request $request){
+        if($request->date_debut && !$request->date_fin)
+        {
+            $evenements = Evenement::where('date_heure', '>=', $request->date_debut)
+                            ->orderBy("date_heure", 'desc')
+                            ->get();
+        }
+        elseif(!$request->date_debut && $request->date_fin)
+        {
+            $evenements = Evenement::where('date_heure', '<=', $request->date_fin)
+                            ->orderBy("date_heure", 'desc')
+                            ->get();
+        }
+        elseif($request->date_debut && $request->date_fin)
+        {
+            $evenements = Evenement::where('date_heure', '>=', $request->date_debut)
+                            ->where('date_heure', '<=', $request->date_fin)
+                            ->orderBy("date_heure", 'desc')
+                            ->get();
+        }
+        else
+        {
+            $evenements = Evenement::orderBy("date_heure", 'desc')->get();
+        }
+
+        return response()->json($evenements);
     }
 
     /**

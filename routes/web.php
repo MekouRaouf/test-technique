@@ -24,6 +24,7 @@ Route::middleware([ 'auth:sanctum', config('jetstream.auth_session'), 'verified'
     Route::get('/dashboard', function () { return Inertia::render('Dashboard'); })->name('dashboard');
     Route::prefix('evenements')->group(function(){
         Route::get('/', [EvenementController::class, 'index'])->name('evenements');
+        Route::get('/search', [EvenementController::class, 'filter'])->name('evenements.filter');
         Route::post('/create', [EvenementController::class, 'store'])->name('evenement.store');
         Route::patch('/{evenement}/edit', [EvenementController::class, 'update'])->name('evenement.edit');
         Route::delete('/{evenement}/delete', [EvenementController::class, 'destroy'])->name('evenement.delete');

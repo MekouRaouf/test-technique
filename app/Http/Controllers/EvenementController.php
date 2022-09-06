@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evenement;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class EvenementController extends Controller
@@ -17,18 +17,10 @@ class EvenementController extends Controller
      */
     public function index()
     {
+        $evenements = Evenement::all();
+
         return Inertia::render('Evenement/Index', [
-            'filters' => Request::all('search', 'trashed'),
-            'evenements' => Evenement::all()
-                ->orderBy('titre')
-                ->filter(Request::only('search', 'trashed'))
-                ->paginate(10)
-                ->withQueryString()
-                ->through(fn ($evenement) => [
-                    'id' => $evenement->id,
-                    'titre' => $evenement->titre,
-                    'date_heure' => $evenement->date_heure,
-                ]),
+            'evenements' => $evenements
         ]);
     }
 
@@ -50,14 +42,12 @@ class EvenementController extends Controller
      */
     public function store(Request $request)
     {
-        Evenement::create(
-            Request::validate([
-                'titre' => ['required', 'max:100'],
-                'date_heure' => ['nullable', 'max:50', 'email'],
-            ])
-        );
+        Evenement::create([
+            'titre' => $request->titre,
+            'date_heure' => $request->date_heure
+        ]);
 
-        return Redirect::route('evenements')->with('success', 'Evenement crée.');
+        return Redirect::route('evenements')->with('message', 'Evenement crée.');
     }
 
     /**
@@ -91,12 +81,10 @@ class EvenementController extends Controller
      */
     public function update(Request $request, Evenement $evenement)
     {
-        $evenement->update(
-            Request::validate([
-                'titre' => ['required', 'max:100'],
-                'date_heure' => ['required', 'timestamp'],
-            ])
-        );
+        $evenement = Evenement::find($evenement->id)->update([
+            'titre' => $request->titre,
+            'date_heure' => $request->date_heure
+        ]);
 
         return Redirect::back()->with('success', 'Evenement modifié.');
     }

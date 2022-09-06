@@ -11,7 +11,7 @@ class Evenement extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $filable = [
+    protected $fillable = [
         'titre',
         'date_heure'
     ];

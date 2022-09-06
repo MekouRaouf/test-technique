@@ -21,6 +21,8 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
-        "element-plus": "^2.2.16"
+        "@element-plus/icons-vue": "^2.0.9",
+        "element-plus": "^2.2.16",
+        "moment": "^2.29.4"
     }
 }

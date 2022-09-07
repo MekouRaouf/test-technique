@@ -49,7 +49,9 @@ class EvenementController extends Controller
             $evenements = Evenement::orderBy("date_heure", 'desc')->get();
         }
 
-        return response()->json($evenements);
+        return Inertia::render('Evenement/Index', [
+            'evenements' => $evenements
+        ]);
     }
 
     /**
